@@ -1,0 +1,12 @@
+const path = require("path")
+const main = path.join(__dirname,"../Client");
+exports.img_bg = `${main}/src/bg.jpg`;
+exports.js_script = `${main}/script.js`;
+exports.img_male = `${main}/src/male.png`;
+exports.img_send = `${main}/src/send.png`;
+exports.ico_site = `${main}/src/favicon.ico`;
+exports.html_main = `${main}/main.html`;
+exports.img_female = `${main}/src/female.png`;
+exports.js_bootstrap = `${main}/bootstrap/node_modules/bootstrap/dist/js/bootstrap.min.js`;
+exports.js_socket = `${__dirname}/packages/node_modules/socket.io/client-dist/socket.io.js`;
+exports.css_bootstrap = `${main}/bootstrap/node_modules/bootstrap/dist/css/bootstrap.min.css`;
