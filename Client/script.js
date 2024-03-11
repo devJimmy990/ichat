@@ -7,14 +7,7 @@ onload = () => {
     const chatBody = document.getElementById("chatBody");
 
     send.addEventListener("click", () => {
-        const data = {
-            user: userName.value,
-            msg: msg.value,
-            time: new Date()
-        }
-        socket.emit("msg", data);
-        addNewMessage(true, data);
-        msg.value = "";
+        sendMessage();
     })
     socket.on("user-counter", (data) => {
         console.log(data > 1);
@@ -31,17 +24,15 @@ onload = () => {
             feedback: `✍️ ${userName.value} typing now....`
         })
     })
-   /* msg.addEventListener("keypress", (data) => {
-        socket.emit("feedback", {
-            feedback: `✍️ ${userName.value} typing now....`
-        })
+
+    msg.addEventListener("keyup", (data) => {
+        switch (data.key) {
+            case "Enter":
+                sendMessage();
+                break;
+        }
     })
 
-    msg.addEventListener("blur", (data) => {
-        socket.emit("feedback", {
-            feedback: ""
-        })
-    })*/
     socket.on("feedback", (data) => {
         clearFeedbackMsg();
         const element = ` 
@@ -57,15 +48,42 @@ onload = () => {
     }
     function addNewMessage(isOwnMsg, data) {
         clearFeedbackMsg();
+        var ref = {
+            color: isOwnMsg ? "black" : "white",
+            bgColor: isOwnMsg ? "beige" : "gray",
+            padding: isOwnMsg ? "ps-3 pe-2 pt-1" : "ps-2 pe-3",
+            align: isOwnMsg ? "align-self-end" : "align-self-start",
+            radius: isOwnMsg ? "20px 0px 20px 20px" : "0px 20px 20px 20px"
+        }
         const element = `
-    <li class="w-75 border-0 mb-3 border-0 ${isOwnMsg ? "align-self-end  ps-3 pe-2 pt-1" : "align-self-start  ps-2 pe-3"}"
-        style="background-color: ${isOwnMsg ? "beige" : "gray"}; color: ${isOwnMsg ? "black" : "white"}; border-radius: ${isOwnMsg ? "20px 0px 20px 20px" : "0px 20px 20px 20px"}; ">
-        <p class="message text-wrap">${data.msg}
-            <br>
-            <span style="font-size:13px;">By <span style="color:purple; font-style:italic; font-weight:bold;">${data.user}</span> : ${moment(data.time).fromNow()}</span>
+        <li class="w-75 border-0 mb-3 border-0 ${ref.align} ${ref.padding}"
+                style="background-color: ${ref.bgColor}; color:
+                ${ref.color}; border-radius: ${ref.radius}; ">
+            <p class=" message text-break">${data.msg}
+                <br>
+                <span style="font-size:13px;">By <span
+                  style="color:purple; font-style:italic; font-weight:bold;">${data.user}</span> :
+                ${moment(data.time).fromNow()}</span>
             </p>
-    </li>
-    `
+        </li>`
         chatBody.innerHTML += element;
+        scrollBottom();
+    } function scrollBottom() {
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function sendMessage() {
+        const data = {
+            user: userName.value,
+            msg: msg.value,
+            time: new Date()
+        }
+        socket.emit("msg", data);
+        addNewMessage(true, data);
+        msg.value = "";
+    }
+    function scrollBottom() {
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
 }
+
